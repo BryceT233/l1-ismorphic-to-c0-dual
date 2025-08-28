@@ -1,5 +1,36 @@
 import Mathlib
 
+/-
+This file formalizes the proof that the dual space of $c_0$ (sequences converging to 0) is isometrically isomorphic to $l^1$ (summable sequences).
+
+# 1. Defining the Space $c_0$
+* The proof begins by formally defining the space $c_0$ as a **`ClosedSubmodule`** of $l^\infty$ (the space of bounded sequences).
+* This is achieved by first proving that the set of sequences tending to 0 is a closed set (`c0_isClosed`), which is essential for defining it as a proper normed space.
+
+# 2. Constructing the Isomorphism
+The core of the work is building the map $\Phi: l^1 \to (c_0)^*$.
+
+* **The Map (`LI_ℓ1_c0dual_toFun`):** The map is defined as you'd expect: for an element $x \in l^1$, it maps to the linear functional $\Phi(x)$ which acts on an element $a \in c_0$ by taking the infinite sum of their component-wise products:
+    $$(\Phi(x))(a) = \sum_{i=0}^{\infty} x_i a_i$$
+    The code proves this sum is well-defined, and that the resulting functional is linear and continuous.
+
+* **Isometry (`LI_ℓ1_c0dual_toFun_norm_eq`):** A crucial and non-trivial part of the proof is showing that this map is an **isometry**, meaning it preserves norms:
+    $$\|\Phi(x)\|_{(c_0)^*} = \|x\|_{l^1}$$
+    This is proven by constructing specific sequences in $c_0$ (based on the `sign` of the terms in $x$) to show that the operator norm can always reach the $l^1$ norm of $x$.
+
+* **Bundling (`LI_ℓ1_c0dual`):** The map and its properties are then bundled together into a formal **`LinearIsometry`** structure, which captures the linearity and norm-preserving properties in a single object.
+
+# 3. Proving Surjectivity
+The final step is to show that the map is surjective (i.e., every functional in $(c_0)^*$ corresponds to some sequence in $l^1$).
+
+* **Constructing the Preimage:** For any given continuous linear functional $f \in (c_0)^*$, a candidate sequence $x \in l^1$ is constructed by evaluating $f$ on the standard basis vectors (sequences with a single 1 and zeros elsewhere):
+    $$x_i = f(e_i)$$
+    A key lemma (`dual_apply_single_mem_ℓ1`) is proven to show that this sequence $x$ is indeed in $l^1$.
+
+* **Final Proof (`surjective_LI_ℓ1_c0dual`):** Using the fact that any sequence in $c_0$ can be written as an infinite sum of its components against the basis vectors (`hasSum_single_c0`), the proof demonstrates that $\Phi(x) = f$, confirming that the map is surjective.
+
+Together, these steps rigorously establish the isometric isomorphism.-/
+
 open Filter Finset Real
 
 -- Prove that the set of bounded sequences converging to $0$ at infinity is closed in $ℓ^∞$
