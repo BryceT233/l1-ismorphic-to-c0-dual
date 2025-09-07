@@ -142,7 +142,7 @@ lemma hasSum_single_c0 : ∀ a : c0.toSubmodule, HasSum (fun i => a.val i • �
     _ < _ := by linarith only [εpos]
 
 -- Construct the natural map from $ℓ¹$ to the dual space of $c0$
-noncomputable def LI_ℓ1_c0dual_toFun : (lp (fun _ : ℕ => ℝ) 1) → (NormedSpace.Dual ℝ c0.toSubmodule) :=
+noncomputable def LI_ℓ1_c0dual_toFun : (lp (fun _ : ℕ => ℝ) 1) → (StrongDual ℝ c0.toSubmodule) :=
   fun ⟨x, hx⟩ => {
     toFun := fun ⟨⟨a, ha⟩, amem⟩ => ∑' i, (x * a) i
     map_add' := by
@@ -233,7 +233,7 @@ lemma LI_ℓ1_c0dual_toFun_norm_eq : ∀ x, ‖LI_ℓ1_c0dual_toFun x‖ = ‖x�
         simp only [Pi.smul_apply, smul_eq_mul, mul_eq_zero, Real.sign_eq_zero_iff]
         right; apply Pi.single_eq_of_ne; omega
     have xn_mem : xn ∈ lp (fun _ : ℕ => ℝ) ⊤ := by
-      simp only [lp, AddSubgroup.mem_mk, Set.mem_setOf_eq]
+      simp only [lp, AddSubgroup.mem_mk]
       apply memℓp_infty; use 1; simp only [upperBounds, norm_eq_abs, Set.mem_range,
         forall_exists_index, forall_apply_eq_imp_iff, Set.mem_setOf_eq]
       intro i; by_cases hi : i ∈ range n
@@ -281,7 +281,7 @@ lemma LI_ℓ1_c0dual_toFun_norm_eq : ∀ x, ‖LI_ℓ1_c0dual_toFun x‖ = ‖x�
         positivity
 
 -- Construct the linear isometry from $ℓ¹$ to the dual space of $c0$ using `LI_ℓ1_c0dual_toFun` and `LI_ℓ1_c0dual_toFun_norm_eq`
-noncomputable def LI_ℓ1_c0dual : LinearIsometry (RingHom.id ℝ) (lp (fun _ : ℕ => ℝ) 1) (NormedSpace.Dual ℝ c0.toSubmodule) := {
+noncomputable def LI_ℓ1_c0dual : LinearIsometry (RingHom.id ℝ) (lp (fun _ : ℕ => ℝ) 1) (StrongDual ℝ c0.toSubmodule) := {
   toFun := LI_ℓ1_c0dual_toFun
   map_add' := by
     rintro ⟨x, hx⟩ ⟨y, hy⟩; ext ⟨⟨a, ha⟩, _⟩; simp only [LI_ℓ1_c0dual_toFun, ContinuousLinearMap.coe_mk',
@@ -305,7 +305,7 @@ noncomputable def LI_ℓ1_c0dual : LinearIsometry (RingHom.id ℝ) (lp (fun _ : 
 }
 
 -- Prove that for any $f$ in the dual space of $c0$, the evaluations of $f$ at coordinate functions form an $ℓ¹$-sequence
-lemma dual_apply_single_mem_ℓ1 : ∀ (f : NormedSpace.Dual ℝ c0.toSubmodule), (fun i => f ⟨lp.single ⊤ i 1, single_mem_c0 i⟩)
+lemma dual_apply_single_mem_ℓ1 : ∀ (f : StrongDual ℝ c0.toSubmodule), (fun i => f ⟨lp.single ⊤ i 1, single_mem_c0 i⟩)
     ∈ lp (fun _ : ℕ => ℝ) 1 := by
   intro f; simp only [Membership.mem, Set.Mem, lp, setOf, AddSubgroup.coe_set_mk,
     ClosedSubmodule.coe_toSubmodule]
